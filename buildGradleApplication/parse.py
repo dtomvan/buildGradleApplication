@@ -1,3 +1,4 @@
+import re
 import sys
 import xml.etree.ElementTree as ET
 import json
@@ -30,9 +31,12 @@ def main():
 
     outputs = []
     for artifact in artifacts:
+        m = re.match('([a-zA-Z_]+)-metadata(-[0-9]+.[0-9]+.[0-9]+.jar)', 'atomicfu-metadata-0.23.1.jar')
+        url_name = f'{m[1]}{m[2]}'
+
         path = f"{artifact.component.group.replace('.', '/')}/{artifact.component.name}/{artifact.component.version}"
         output = {
-            "urls": [f"{maven_repo}/{path}/{artifact.name}" for maven_repo in maven_repos],
+            "urls": [f"{maven_repo}/{path}/{url_name}" for maven_repo in maven_repos],
             "path": path,
             "name": artifact.name,
             "component": {
